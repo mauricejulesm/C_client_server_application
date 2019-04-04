@@ -15,3 +15,5 @@ Although more than one client can connect to the server at the same time, you do
 have to consider any further concurrency issues in this coursework. 
 
 # Further developments
+
+##Error handling
