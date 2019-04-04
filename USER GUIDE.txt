@@ -1,4 +1,8 @@
 # Client_server_application
+
+* Link to my github repository: https://github.com/mauricejulesm/C_client_server_application
+* Send me an email to contribute : jmulisa15@alustudent.com
+
 A Client Server Application in C Using Unix Sockets and Threads
 
 # About the application
