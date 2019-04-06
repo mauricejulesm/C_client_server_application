@@ -1,6 +1,12 @@
 // Cwk2: client.c - message length headers with variable sized payloads
 //  also use of readn() and writen() implemented in separate code module
 
+/* 
+  Author: Jules Maurice Mulisa
+  Student ID: S1719024
+  Version: 0.1 
+*/
+
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -20,16 +26,15 @@ typedef struct {
 } employee;
 
 // how to send and receive structs
-void send_and_get_employee(int socket, employee *e)  
-{
+void send_and_get_employee(int socket, employee *e)  {
     size_t payload_length = sizeof(employee);
 
     // send the original struct
-    writen(socket, (unsigned char *) &payload_length, sizeof(size_t));	
-    writen(socket, (unsigned char *) e, payload_length);	 		
+    writen(socket, (unsigned char *) &payload_length, sizeof(size_t));  
+    writen(socket, (unsigned char *) e, payload_length);      
 
     // get back the altered struct
-    readn(socket, (unsigned char *) &payload_length, sizeof(size_t));	   
+    readn(socket, (unsigned char *) &payload_length, sizeof(size_t));    
     readn(socket, (unsigned char *) e, payload_length);
 
     // print out details of received & altered struct
@@ -39,27 +44,25 @@ void send_and_get_employee(int socket, employee *e)
 } // end send_and_get_employee()
 
 // how to receive a string
-void get_hello(int socket)
-{
+void get_hello(int socket){
     char hello_string[32];
     size_t k;
 
-    readn(socket, (unsigned char *) &k, sizeof(size_t));	
+    readn(socket, (unsigned char *) &k, sizeof(size_t));  
     readn(socket, (unsigned char *) hello_string, k);
 
     printf("Hello String: %s\n", hello_string);
     printf("Received: %zu bytes\n\n", k);
 } // end get_hello()
 
-int main(void)
-{
+int main(void){
     // *** this code down to the next "// ***" does not need to be changed except the port number
     int sockfd = 0;
     struct sockaddr_in serv_addr;
 
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	perror("Error - could not create socket");
-	exit(EXIT_FAILURE);
+      perror("Error - could not create socket");
+      exit(EXIT_FAILURE);
     }
 
     serv_addr.sin_family = AF_INET;
@@ -70,8 +73,8 @@ int main(void)
 
     // try to connect...
     if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == -1)  {
-	perror("Error - connect failed");
-	exit(1);
+      perror("Error - connect failed");
+      exit(1);  
     } else
        printf("Connected to server...\n");
 
@@ -84,7 +87,7 @@ int main(void)
     get_hello(sockfd);
 
     // send and receive a changed struct to/from the server
-    employee *employee1;		
+    employee *employee1;    
     employee1 = (employee *) malloc(sizeof(employee));
 
     // arbitrary values
@@ -95,15 +98,16 @@ int main(void)
     int i;
     for (i = 0; i < 5; i++) {
          printf("(Counter: %d)\n", i);
-	 send_and_get_employee(sockfd, employee1);
+   send_and_get_employee(sockfd, employee1);
          printf("\n");
     }
 
+    // free up the memory taken by employee1
     free(employee1);
 
-    // *** make sure sockets are cleaned up
-
+    //socket cleaning 
     close(sockfd);
 
+    // successfully executed
     exit(EXIT_SUCCESS);
 } // end main()
