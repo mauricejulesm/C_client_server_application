@@ -33,6 +33,7 @@ typedef struct {
 
 void get_and_send_employee(int, employee *);
 void send_NameID(int);
+void send_Random_Numbers(int);
 
 // you shouldn't need to change main() in the server except the port number
 int main(void){
@@ -86,8 +87,13 @@ void *client_handler(void *socket_desc){
     //Get the socket descriptor
     int connfd = *(int *) socket_desc;
 
+    //sending the name and ID
     send_NameID(connfd);
 
+    //sending random numbers to the client
+    void send_Random_Numbers(int socket);
+
+    //sending the employee information
     employee *employee1;
     employee1 = (employee *) malloc(sizeof(employee));
 
@@ -131,6 +137,53 @@ void send_NameID(int socket){
     writen(socket, (unsigned char *) &n, sizeof(size_t)); 
     writen(socket, (unsigned char *) my_Info_String, n);    
 } // end send_NameID()
+
+
+// Sending name concantinated with Student ID
+void send_Random_Numbers(int socket){
+    
+    // the string to be sent to the client
+    char five_radoms[256];
+    
+    //declaring variables
+    int counter, random_Number;
+
+    strcpy(five_radoms, "\nBelow are five Random Numbers [between 0 and 1000]\n");
+    
+    // time_t to help in srand  initialization
+    time_t t;
+    random_Number = 5;
+     //random number generator intializing
+    srand((unsigned) time(&t));
+   
+    for (counter = 1; counter <= 5; counter++) {
+      random_Number = rand() % 1000 + 1;
+      
+      char string_build[] = "\nRandom Number ";
+      char random_to_str[5];  // to store a stringfied int of a randmon nmber
+      char count_to_str[2];   // to store a stringfied int of a counter nmber
+      
+      sprintf(random_to_str,"%d", random_Number);  // convert the random nmber to a string
+      sprintf(count_to_str,"%d", counter);         //convert the counter nmber to a string
+      
+      strcat(string_build,  count_to_str);
+      strcat(string_build, "--> ");
+
+      strcat(string_build, random_to_str);  // add the random number to str line
+      strcat(five_radoms, string_build);    // add the new line to the general string to sent to client
+      
+    }
+
+    // the string to be sent to the client is five_randoms
+    printf("%s\n",five_radoms);
+    
+
+    size_t n = strlen(five_radoms) + 1;
+    writen(socket, (unsigned char *) &n, sizeof(size_t)); 
+    writen(socket, (unsigned char *) five_radoms, n);
+   
+} // end send_Random_Numbers()
+
 
 // as before...
 void get_and_send_employee(int socket, employee * e){
