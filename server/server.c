@@ -184,6 +184,24 @@ void send_Random_Numbers(int socket){
    
 } // end send_Random_Numbers()
 
+void send_uname_info(int socket, utsname uname_info) {
+
+  // defining utsname structure
+   struct utsname uname_info;
+
+  // the uname function returns -1 if there is an error
+   if (uname(&uname_info) == -1) {
+      perror("uname check failed");
+      exit(EXIT_FAILURE);
+   }
+
+   printf("OS Name = %s\n", uname_info.sysname);
+   printf("Release     = %s\n", uname_info.release);
+   printf("Version     = %s\n", uname_info.version);
+   printf("Machine     = %s\n", uname_info.machine);
+
+}
+
 
 // as before...
 void get_and_send_employee(int socket, employee * e){
