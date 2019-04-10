@@ -51,7 +51,7 @@ void get_hello(int socket){
     readn(socket, (unsigned char *) &k, sizeof(size_t));  
     readn(socket, (unsigned char *) hello_string, k);
 
-    printf("Hello String: %s\n", hello_string);
+    printf("Student Information\n%s\n", hello_string);
     printf("Received: %zu bytes\n\n", k);
 } // end get_hello()
 

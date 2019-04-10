@@ -18,8 +18,9 @@
 #include <pthread.h>
 #include "rdwrn.h"
 
-//StudentID 
-char const my_ID = "S1719024"
+//StudentID  and Name
+#define my_ID "S1719024"
+#define my_Name "JULES MAURICE MULISA"
 
 // thread function
 void *client_handler(void *);
@@ -31,7 +32,7 @@ typedef struct {
 } employee;
 
 void get_and_send_employee(int, employee *);
-void send_hello(int);
+void send_NameID(int);
 
 // you shouldn't need to change main() in the server except the port number
 int main(void){
@@ -85,7 +86,7 @@ void *client_handler(void *socket_desc){
     //Get the socket descriptor
     int connfd = *(int *) socket_desc;
 
-    send_hello(connfd);
+    send_NameID(connfd);
 
     employee *employee1;
     employee1 = (employee *) malloc(sizeof(employee));
@@ -111,14 +112,25 @@ void *client_handler(void *socket_desc){
     return 0;
 }  // end client_handler()
 
-// how to send a string
-void send_hello(int socket){
-    char hello_string[] = "hello SP student";
+// Sending name concantinated with Student ID
+void send_NameID(int socket){
+    // concatenating name and ID
+    char my_Info_String[]="";
 
-    size_t n = strlen(hello_string) + 1;
+    //set the memory of the string
+    //memset(my_Info_String, '\0', sizeof(my_Info_String));
+
+    // copy the starting words to the info string
+    strcpy(my_Info_String, "Student Name is: ");
+    //concatenate student name and ID
+    strcat(my_Info_String, my_Name);
+    strcat(my_Info_String, "\nStudentID is: ");
+    strcat(my_Info_String, my_ID);
+
+    size_t n = strlen(my_Info_String) + 1;
     writen(socket, (unsigned char *) &n, sizeof(size_t)); 
-    writen(socket, (unsigned char *) hello_string, n);    
-} // end send_hello()
+    writen(socket, (unsigned char *) my_Info_String, n);    
+} // end send_NameID()
 
 // as before...
 void get_and_send_employee(int socket, employee * e){
