@@ -167,7 +167,7 @@ void send_Random_Numbers(int socket){
       sprintf(count_to_str,"%d", counter);         //convert the counter nmber to a string
       
       strcat(string_build,  count_to_str);
-      strcat(string_build, "--> ");
+      strcat(string_build, " --> ");
 
       strcat(string_build, random_to_str);  // add the random number to str line
       strcat(five_radoms, string_build);    // add the new line to the general string to sent to client
