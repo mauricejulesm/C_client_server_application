@@ -17,23 +17,30 @@
 #include <sys/types.h>
 #include <pthread.h>
 #include "rdwrn.h"
+#include <sys/utsname.h>
+
 
 //StudentID  and Name
-#define my_ID "S1719024"
-#define my_Name "JULES MAURICE MULISA"
+const char my_Name_ID[] = "JULES MAURICE MULISA\nMy ID: S1719024";
 
 // thread function
 void *client_handler(void *);
 
+// employee struct
 typedef struct {
     int id_number;
     int age;
     float salary;
 } employee;
 
+// defining utsname structure
+struct utsname uname_info;
+
+//functions declaration
 void get_and_send_employee(int, employee *);
 void send_NameID(int);
 void send_Random_Numbers(int);
+//void send_uname_info(int socket, uname_info *)
 
 // you shouldn't need to change main() in the server except the port number
 int main(void){
@@ -121,17 +128,12 @@ void *client_handler(void *socket_desc){
 // Sending name concantinated with Student ID
 void send_NameID(int socket){
     // concatenating name and ID
-    char my_Info_String[]="";
-
-    //set the memory of the string
-    //memset(my_Info_String, '\0', sizeof(my_Info_String));
-
-    // copy the starting words to the info string
-    strcpy(my_Info_String, "Student Name is: ");
-    //concatenate student name and ID
-    strcat(my_Info_String, my_Name);
-    strcat(my_Info_String, "\nStudentID is: ");
-    strcat(my_Info_String, my_ID);
+    char my_Info_String[256];
+    char my_info_concat[256];
+    
+    strcpy(my_info_concat, my_Name_ID);
+  
+    strcpy(my_Info_String, my_info_concat);
 
     size_t n = strlen(my_Info_String) + 1;
     writen(socket, (unsigned char *) &n, sizeof(size_t)); 
@@ -184,23 +186,19 @@ void send_Random_Numbers(int socket){
    
 } // end send_Random_Numbers()
 
-void send_uname_info(int socket, utsname uname_info) {
-
-  // defining utsname structure
-   struct utsname uname_info;
+//void send_uname_info(int socket, uname_info * uts) {
 
   // the uname function returns -1 if there is an error
-   if (uname(&uname_info) == -1) {
-      perror("uname check failed");
-      exit(EXIT_FAILURE);
-   }
+  // if (uname(&uname_info) == -1) {
+    //  perror("uname check failed");
+      //exit(EXIT_FAILURE);
+  // }
 
-   printf("OS Name = %s\n", uname_info.sysname);
-   printf("Release     = %s\n", uname_info.release);
-   printf("Version     = %s\n", uname_info.version);
-   printf("Machine     = %s\n", uname_info.machine);
+   //printf("OS Name = %s\n", uts->sysname);
+   //printf("Release     = %s\n", uts->release);
+   //printf("Version     = %s\n", uts->version);
 
-}
+//}
 
 
 // as before...
